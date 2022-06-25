@@ -14,11 +14,11 @@ const Viewport = () => {
       return false;
     },
     async onChange(info) {
-      console.log('info', info);
       const { fileList } = info;
       const loadStatuts = await loadImage(fileList);
       if (loadStatuts) setLoadStatus(true);
     },
+    showUploadList: false,
   };
 
   useEffect(() => {
