@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone';
 const Upload = () => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
-  acceptedFiles.forEach((file) => console.log('useDropzone', useDropzone));
+  acceptedFiles.forEach((file) => console.log('useDropzone', file));
 
   return (
     <div {...getRootProps({ className: 'dropzone' })}>

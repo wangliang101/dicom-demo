@@ -6,6 +6,8 @@ import cornerstone from 'cornerstone-core';
 
 import dicomParser from 'dicom-parser';
 
+import {} from 'antd';
+
 var config = {
   maxWebWorkers: navigator.hardwareConcurrency || 1,
   startWebWorkersOnDemand: true,
@@ -26,3 +28,41 @@ function _initCornerstoneWADOImageLoade() {
   // Image Loader
   cornerstoneWADOImageLoader.webWorkerManager.initialize(config);
 }
+
+_initCornerstoneWADOImageLoade();
+
+interface fileList {
+  // uid: string;
+  // size?: number;
+  // name: string;
+  // fileName?: string;
+  // lastModified?: number;
+  // lastModifiedDate?: Date;
+  // url?: string;
+  // percent?: number;
+  // thumbUrl?: string;
+  // crossOrigin?: React.ImgHTMLAttributes<HTMLImageElement>['crossOrigin'];
+  originFileObj?: Object;
+}
+
+const loadImage = async (fileList: Array<fileList>) => {
+  const status = await new Promise((resolve, reject) => {
+    try {
+      const cache: Array<string> = [];
+      fileList.forEach((file) => {
+        const imageId = cornerstoneWADOImageLoader.wadouri.fileManager.add(
+          file?.originFileObj
+        );
+        cache.push(imageId);
+      });
+      window.cache = cache;
+      resolve(true);
+    } catch (err) {
+      console.log('图像加载失败', err);
+      resolve(false);
+    }
+  });
+  return status;
+};
+
+export { loadImage };
