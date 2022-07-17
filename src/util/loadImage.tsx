@@ -4,7 +4,16 @@ import cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
 // @ts-ignore
 import cornerstone from 'cornerstone-core';
 
+// @ts-ignore
+import cornerstoneTools from 'cornerstone-tools';
+
 import dicomParser from 'dicom-parser';
+
+// @ts-ignore
+import cornerstoneMath from 'cornerstone-math';
+
+// @ts-ignore
+import Hammer from 'hammerjs';
 
 import {} from 'antd';
 
@@ -24,6 +33,16 @@ function _initCornerstoneWADOImageLoade() {
   // Externals
   cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
   cornerstoneWADOImageLoader.external.dicomParser = dicomParser;
+
+  cornerstoneTools.external.cornerstoneMath = cornerstoneMath;
+  cornerstoneTools.external.Hammer = Hammer;
+
+  cornerstoneTools.external.cornerstone = cornerstone;
+
+  // 初始化工具，此方法必须放在cornerstone.enable(element)前，否则工具可能会无法使用
+  cornerstoneTools.init({
+    showSVGCursors: true,
+  });
 
   // Image Loader
   cornerstoneWADOImageLoader.webWorkerManager.initialize(config);
@@ -45,15 +64,20 @@ interface fileList {
   originFileObj?: Object;
 }
 
+interface Cache {
+  [propname: string]: any;
+}
+
 const loadImage = async (fileList: Array<fileList>) => {
   const status = await new Promise((resolve, reject) => {
     try {
-      const cache: Array<string> = [];
+      // const cache: Array<string> = [];
+      const cache: Cache = {};
       fileList.forEach((file) => {
         const imageId = cornerstoneWADOImageLoader.wadouri.fileManager.add(
           file?.originFileObj
         );
-        cache.push(imageId);
+        cache[imageId] = file;
       });
       window.cache = cache;
       resolve(true);

@@ -4,6 +4,7 @@ import { loadImage } from '../../util/loadImage';
 
 // @ts-ignore
 import cornerstone from 'cornerstone-core';
+
 import './index.less';
 
 const Viewport = () => {
@@ -23,7 +24,7 @@ const Viewport = () => {
 
   useEffect(() => {
     if (loadStatus) {
-      const cache = window.cache;
+      const cache = Object.keys(window.cache);
       cornerstone.enable(viewportRef.current);
       cornerstone.loadImage(cache[0]).then(function (image: any) {
         cornerstone.displayImage(viewportRef.current, image);
