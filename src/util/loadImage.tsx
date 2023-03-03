@@ -41,6 +41,7 @@ function _initCornerstoneWADOImageLoade() {
 
   // 初始化工具，此方法必须放在cornerstone.enable(element)前，否则工具可能会无法使用
   cornerstoneTools.init({
+    mouseEnabled: true,
     showSVGCursors: true,
   });
 
@@ -68,17 +69,20 @@ interface Cache {
   [propname: string]: any;
 }
 
-const loadImage = async (fileList: Array<fileList>) => {
+const loadImage = async (fileList: FileList) => {
   const status = await new Promise((resolve, reject) => {
     try {
       // const cache: Array<string> = [];
       const cache: Cache = {};
-      fileList.forEach((file) => {
-        const imageId = cornerstoneWADOImageLoader.wadouri.fileManager.add(
-          file?.originFileObj
-        );
+      for (let i = 0; i < fileList.length; i++) {
+        const file = fileList[i];
+        const imageId = cornerstoneWADOImageLoader.wadouri.fileManager.add(file);
         cache[imageId] = file;
-      });
+      }
+      // fileList.forEach((file) => {
+      //   const imageId = cornerstoneWADOImageLoader.wadouri.fileManager.add(file?.originFileObj);
+      //   cache[imageId] = file;
+      // });
       window.cache = cache;
       resolve(true);
     } catch (err) {

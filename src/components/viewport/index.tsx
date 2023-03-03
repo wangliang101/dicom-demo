@@ -31,14 +31,22 @@ const Viewport = () => {
       });
     }
   }, [loadStatus]);
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return null;
+    const loadStatuts = await loadImage(files);
+    if (loadStatuts) setLoadStatus(true);
+    console.log('files', files);
+  };
   return (
     <div className="viewport-wrap">
       <div className="upload">
-        <Upload {...props}>
+        {/* <Upload {...props}>
           <div className="upload_area">
             <p>上传</p>
           </div>
-        </Upload>
+        </Upload> */}
+        <input type="file" onChange={handleUpload} multiple />
       </div>
       <div className="viewport" ref={viewportRef}></div>
     </div>
