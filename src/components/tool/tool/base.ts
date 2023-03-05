@@ -1,4 +1,3 @@
-// @ts-ignore
 import cornerstoneTools from 'cornerstone-tools';
 console.log('cornerstoneTools', cornerstoneTools);
 const baseTool = (toolName: string, status: Boolean) => {

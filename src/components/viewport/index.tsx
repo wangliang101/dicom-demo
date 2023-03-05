@@ -1,4 +1,5 @@
 import { ChangeEvent, DragEvent, useEffect, useState, useRef } from 'react';
+import cornerstoneTools from 'cornerstone-tools';
 import { Upload, UploadProps } from 'antd';
 import { loadImage } from '../../util/loadImage';
 
@@ -14,11 +15,11 @@ const Viewport = () => {
     beforeUpload: () => {
       return false;
     },
-    async onChange(info) {
-      const { fileList } = info;
-      const loadStatuts = await loadImage(fileList);
-      if (loadStatuts) setLoadStatus(true);
-    },
+    // async onChange(info) {
+    //   const { fileList } = info;
+    //   const loadStatuts = await loadImage(fileList);
+    //   if (loadStatuts) setLoadStatus(true);
+    // },
     showUploadList: false,
   };
 
@@ -29,6 +30,22 @@ const Viewport = () => {
       cornerstone.loadImage(cache[0]).then(function (image: any) {
         cornerstone.displayImage(viewportRef.current, image);
       });
+
+      const WwwcTool = cornerstoneTools.WwwcTool;
+      cornerstoneTools.addTool(WwwcTool);
+      cornerstoneTools.setToolActive('Wwwc', { mouseButtonMask: 2 });
+
+      const ZoomTool = cornerstoneTools.ZoomTool;
+      cornerstoneTools.addTool(ZoomTool, {
+        // Optional configuration
+        configuration: {
+          invert: false,
+          preventZoomOutsideImage: false,
+          minScale: 0.1,
+          maxScale: 20.0,
+        },
+      });
+      cornerstoneTools.setToolActive('Zoom', { mouseButtonMask: 1 });
     }
   }, [loadStatus]);
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

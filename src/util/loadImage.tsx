@@ -1,21 +1,9 @@
-// @ts-ignore
 import cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
-
-// @ts-ignore
 import cornerstone from 'cornerstone-core';
-
-// @ts-ignore
 import cornerstoneTools from 'cornerstone-tools';
-
 import dicomParser from 'dicom-parser';
-
-// @ts-ignore
 import cornerstoneMath from 'cornerstone-math';
-
-// @ts-ignore
 import Hammer from 'hammerjs';
-
-import {} from 'antd';
 
 var config = {
   maxWebWorkers: navigator.hardwareConcurrency || 1,
@@ -50,20 +38,6 @@ function _initCornerstoneWADOImageLoade() {
 }
 
 _initCornerstoneWADOImageLoade();
-
-interface fileList {
-  // uid: string;
-  // size?: number;
-  // name: string;
-  // fileName?: string;
-  // lastModified?: number;
-  // lastModifiedDate?: Date;
-  // url?: string;
-  // percent?: number;
-  // thumbUrl?: string;
-  // crossOrigin?: React.ImgHTMLAttributes<HTMLImageElement>['crossOrigin'];
-  originFileObj?: Object;
-}
 
 interface Cache {
   [propname: string]: any;
