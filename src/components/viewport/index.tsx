@@ -1,13 +1,13 @@
-import { ChangeEvent, DragEvent, useEffect, useState, useRef } from 'react';
+import { DragEvent, useEffect, useState, useRef } from 'react';
 import cornerstoneTools from 'cornerstone-tools';
 import { Upload, UploadProps } from 'antd';
 import { loadImage } from '../../util/loadImage';
-
+window.cornerstoneTools = cornerstoneTools;
 // @ts-ignore
 import cornerstone from 'cornerstone-core';
 
 import './index.less';
-
+let currentDicomIndex = 0;
 const Viewport = () => {
   const viewportRef = useRef(null);
   const [loadStatus, setLoadStatus] = useState(false);
@@ -23,6 +23,38 @@ const Viewport = () => {
     showUploadList: false,
   };
 
+  // 关闭鼠标右键默认事件
+  useEffect(() => {
+    const handlePreventDafault = function (e: MouseEvent) {
+      e.preventDefault();
+    };
+    function handleScroll(event: WheelEvent) {
+      // Do something in response to the scroll event
+      const cache = Object.keys(window.cache);
+      if (cache && viewportRef.current) {
+        currentDicomIndex = currentDicomIndex + Math.round(event.deltaY / 13);
+        if (currentDicomIndex > cache.length - 1) {
+          currentDicomIndex = cache.length - 1;
+        } else if (currentDicomIndex < 0) {
+          currentDicomIndex = 0;
+        }
+        console.log('index', cache, `dicomfile:${currentDicomIndex}`);
+        cornerstone.loadImage(cache[currentDicomIndex]).then(function (image: any) {
+          cornerstone.displayImage(viewportRef.current, image);
+        });
+      }
+      console.log(event);
+    }
+    document.addEventListener('contextmenu', handlePreventDafault);
+    document.addEventListener('wheel', handleScroll);
+    return () => {
+      document.removeEventListener('contextmenu', handlePreventDafault);
+      document.removeEventListener('wheel', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {}, []);
+
   useEffect(() => {
     if (loadStatus) {
       const cache = Object.keys(window.cache);
@@ -31,6 +63,7 @@ const Viewport = () => {
         cornerstone.displayImage(viewportRef.current, image);
       });
 
+      // 设置鼠标快捷键，中键为缩放，右键为wwwc
       const WwwcTool = cornerstoneTools.WwwcTool;
       cornerstoneTools.addTool(WwwcTool);
       cornerstoneTools.setToolActive('Wwwc', { mouseButtonMask: 2 });
@@ -45,7 +78,7 @@ const Viewport = () => {
           maxScale: 20.0,
         },
       });
-      cornerstoneTools.setToolActive('Zoom', { mouseButtonMask: 1 });
+      cornerstoneTools.setToolActive('Zoom', { mouseButtonMask: 4 });
     }
   }, [loadStatus]);
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
