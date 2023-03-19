@@ -1,6 +1,7 @@
 import React from 'react';
 import Viewport from '../../components/viewport';
 import Tool from '../../components/tool';
+import TagList from '../../components/tagList';
 import './index.less';
 
 const Home = () => {
@@ -14,7 +15,9 @@ const Home = () => {
           <Tool />
         </div>
       </div>
-      <div className="home-right"></div>
+      <div className="home-right">
+        <TagList />
+      </div>
     </div>
   );
 };

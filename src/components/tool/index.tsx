@@ -1,14 +1,9 @@
 import { useReducer, useCallback, MouseEvent, useEffect } from 'react';
-import { baseTool, tagTool } from './tool';
+import { baseTool } from './tool';
 import { Button } from 'antd';
 import './index.less';
 
-// const toolOption = ['tag', 'Length', 'Angle'];
-
 const initialToolOption = {
-  Tag: {
-    active: false,
-  },
   Length: {
     active: false,
   },
@@ -30,14 +25,8 @@ type ActionType = {
   payload?: number;
 };
 
-function reducer(
-  state: InitialToolOption,
-  action: ActionType
-): InitialToolOption {
+function reducer(state: InitialToolOption, action: ActionType): InitialToolOption {
   switch (action.type) {
-    case 'Tag':
-      tagTool(Object.values(window.cache)[0], !state.Tag.active);
-      return { ...state, Tag: { active: !state.Tag.active } };
     case 'Length':
       baseTool('Length', !state.Length.active);
       return { ...state, Length: { active: !state.Length.active } };

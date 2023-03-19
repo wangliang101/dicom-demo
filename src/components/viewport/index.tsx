@@ -1,16 +1,15 @@
-import { DragEvent, useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useContext } from 'react';
+import { APPContext } from '../../state';
 import cornerstoneTools from 'cornerstone-tools';
-import { Upload, UploadProps } from 'antd';
+import { UploadProps } from 'antd';
 import { loadImage } from '../../util/loadImage';
-window.cornerstoneTools = cornerstoneTools;
-// @ts-ignore
 import cornerstone from 'cornerstone-core';
 
 import './index.less';
 let currentDicomIndex = 0;
 const Viewport = () => {
   const viewportRef = useRef(null);
-  const [loadStatus, setLoadStatus] = useState(false);
+  const { state, dispatch } = useContext(APPContext);
   const props: UploadProps = {
     beforeUpload: () => {
       return false;
@@ -32,7 +31,7 @@ const Viewport = () => {
       // Do something in response to the scroll event
       const cache = Object.keys(window.cache);
       if (cache && viewportRef.current) {
-        currentDicomIndex = currentDicomIndex + Math.round(event.deltaY / 13);
+        currentDicomIndex = currentDicomIndex + Math.round(event.deltaY / 2);
         if (currentDicomIndex > cache.length - 1) {
           currentDicomIndex = cache.length - 1;
         } else if (currentDicomIndex < 0) {
@@ -45,18 +44,22 @@ const Viewport = () => {
       }
       console.log(event);
     }
+    const handleResize = () => {
+      console.log('resize');
+      cornerstone.resize(viewportRef.current);
+    };
     document.addEventListener('contextmenu', handlePreventDafault);
     document.addEventListener('wheel', handleScroll);
+    window.addEventListener('resize', handleResize);
     return () => {
       document.removeEventListener('contextmenu', handlePreventDafault);
       document.removeEventListener('wheel', handleScroll);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
-    if (loadStatus) {
+    if (state.loadState) {
       const cache = Object.keys(window.cache);
       cornerstone.enable(viewportRef.current);
       cornerstone.loadImage(cache[0]).then(function (image: any) {
@@ -80,12 +83,12 @@ const Viewport = () => {
       });
       cornerstoneTools.setToolActive('Zoom', { mouseButtonMask: 4 });
     }
-  }, [loadStatus]);
+  }, [state.loadState]);
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return null;
     const loadStatuts = await loadImage(files);
-    if (loadStatuts) setLoadStatus(true);
+    if (loadStatuts) dispatch({ type: 'CHANGE_LOAD_STATE', payload: true });
     console.log('files', files);
   };
   return (
