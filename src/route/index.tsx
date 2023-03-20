@@ -8,7 +8,7 @@ const Routes = () => {
 
 const Routers = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="dicom-demo">
       <Routes />
     </BrowserRouter>
   );
