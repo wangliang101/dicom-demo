@@ -18,5 +18,5 @@ export default defineConfig({
       },
     },
   },
-  base: 'dicom-demo',
+  base: '/dicom-demo/',
 });
